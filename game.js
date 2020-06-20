@@ -4,18 +4,18 @@ document.addEventListener('DOMContentLoaded', function() {
   var canvasContext = gameCanvas.canvas2dContext;
   var canvasElement = gameCanvas.canvasElement;
   var flabber = new bird(canvasContext, gameCanvas);
-  var scoreBoard = new ScoreBoard();
+  var scoreBoard = new ScoreBoard('', canvasContext, gameCanvas);
 
   addEventListeners(flabber);
   init(gameCanvas, canvasContext, canvasElement);
-  startGame(gameCanvas, canvasContext, canvasElement, flabber);
+  startGame(gameCanvas, canvasContext, canvasElement, flabber, scoreBoard);
 })
 
-function ScoreBoard (name) {
+function ScoreBoard (name, context, canvas) {
   'use strict'
 
   if (!!ScoreBoard.instance) {
-    return ScoreBoard.instance;
+    return ScoreBoard.instance; // making singleton
   }
 
   var scoreBoardName = name || 'scoreboard';
@@ -24,18 +24,27 @@ function ScoreBoard (name) {
   var getName = function () {
     return scoreBoardName;
   }
+
   var getScore = function () {
     return score;
   }
 
-  var setScore = function (newScore) {
-    score =  newScore ? newScore : score++;
+  var updateScore = function (newScore) {
+    score =  newScore ? newScore : score + 1;
+  }
+
+  var displayScore = function () {
+    context.font = "40px Georgia";
+    context.fillStyle="red";
+    updateScore();
+    context.fillText(`score: ${score}`, canvas.width()-250, 100);
   }
 
   var returnVar =  {
     name: getName,
     score: getScore,
-    setScore: setScore,
+    updateScore: updateScore,
+    displayScore: displayScore,
   }
 
   ScoreBoard.instance = returnVar;
@@ -207,7 +216,7 @@ var init = function (canvas, context, canvasElement) {
   context.fillRect(0,0, 100,100);
 }
 
-var startGame = function (canvas, context, canvasElement, flabber) {
+var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
   var pillers = [];
   var backgroundImage = new Image();
   backgroundImage.src = "./images/backgroung.svg";
@@ -229,5 +238,6 @@ var startGame = function (canvas, context, canvasElement, flabber) {
       }
     }
     flabber.draw();
+    scoreBoard.displayScore();
   }, 20);
 }
