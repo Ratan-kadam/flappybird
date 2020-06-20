@@ -1,0 +1,15 @@
+:root {
+  --green: #5baf4c75;
+  --lightyellow: #FFFFE0;
+}
+
+body, html {
+  background-color: var(--lightyellow);
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+#canvas {
+  background-color: var(--green);
+}
