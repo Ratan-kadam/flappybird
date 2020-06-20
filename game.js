@@ -104,8 +104,10 @@ var piller = function (context, canvas, custumLocation, flabber) {
   var minWindowToEscape = canvas.height() * 0.20;
   var topPillerheight = getRandomValidHeight();
   var bottomX = custumLocation || canvas.width();
-  // var bottomY = canvas.height();
   var bottomPillerheight = (canvas.height() - (topPillerheight + minWindowToEscape));
+  var variableHeight = bottomPillerheight * Math.random();
+  minWindowToEscape = minWindowToEscape + variableHeight;
+  bottomPillerheight = (canvas.height() - (topPillerheight + minWindowToEscape));
   var bottomPillerY = (topPillerheight + minWindowToEscape);
 
 
@@ -288,7 +290,6 @@ var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
         pillers[i].draw();
         if (endGame) {
           clearInterval(GameInterval);
-          break;
         }
       }
     }
