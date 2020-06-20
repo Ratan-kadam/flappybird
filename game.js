@@ -4,10 +4,43 @@ document.addEventListener('DOMContentLoaded', function() {
   var canvasContext = gameCanvas.canvas2dContext;
   var canvasElement = gameCanvas.canvasElement;
   var flabber = new bird(canvasContext, gameCanvas);
+  var scoreBoard = new ScoreBoard();
+
   addEventListeners(flabber);
   init(gameCanvas, canvasContext, canvasElement);
   startGame(gameCanvas, canvasContext, canvasElement, flabber);
 })
+
+function ScoreBoard (name) {
+  'use strict'
+
+  if (!!ScoreBoard.instance) {
+    return ScoreBoard.instance;
+  }
+
+  var scoreBoardName = name || 'scoreboard';
+  var score = 0;
+
+  var getName = function () {
+    return scoreBoardName;
+  }
+  var getScore = function () {
+    return score;
+  }
+
+  var setScore = function (newScore) {
+    score =  newScore ? newScore : score++;
+  }
+
+  var returnVar =  {
+    name: getName,
+    score: getScore,
+    setScore: setScore,
+  }
+
+  ScoreBoard.instance = returnVar;
+  return returnVar;
+}
 
 var addEventListeners = function(flabber) {
   var skipKeyPress = false;
