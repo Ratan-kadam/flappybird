@@ -70,9 +70,9 @@ var addEventListeners = function(flabber) {
 
 var checkCollision = function (flabber, piller) {
   var birdX = flabber.getX();
-  var birdXLimit = birdX + 100; // 100 is bird size (height and width)
-  var birdY = flabber.getY();
-  var birdYLimit = birdY + 100;
+  var birdXLimit = birdX + 80; // 100 is bird size (height and width) buffer of 20px
+  var birdY = flabber.getY() + 5 ;  // top buffer 5px
+  var birdYLimit = birdY + 80;
   var pillerX = piller.x();
   var pillerXLimit = pillerX + 50; // 50 is piller width
   var pillerY = piller.y();
@@ -80,17 +80,19 @@ var checkCollision = function (flabber, piller) {
   var topPillerheight = piller.topPillerheight;
   var bottomPillerYCordinate = piller.bottomPillerY;
 
-  // comparing bird upper limit
-  if (birdXLimit >= pillerX && birdY <= topPillerheight) {
-    console.log("collision on top piller");
-    return true;
-  };
+  if (pillerX > birdX) { // ignoring the pillers gone behind the bird;
+      // comparing bird upper limit
+    if (birdXLimit >= pillerX && birdY <= topPillerheight) {
+      console.log("collision on top piller");
+      return true;
+    };
 
-  // comparing bird lower limit with below piller
-  if (birdXLimit >= pillerX && birdYLimit >= bottomPillerYCordinate) {
-    console.log("collision on bottom piller");
-    return true;
-  };
+    // comparing bird lower limit with below piller
+    if (birdXLimit >= pillerX && birdYLimit >= bottomPillerYCordinate) {
+      console.log("collision on bottom piller");
+      return true;
+    };
+  }
 
   return false;
 }
@@ -215,6 +217,9 @@ var bird = function (context, canvas) {
 
   var draw = function () {
     dropDownBehaviour();
+    // for test reference
+    // context.fillStyle = "rgb(50,205,50, 0.07)"
+    // context.fillRect(x, y, 100, 100);
     context.drawImage(birdImage, x, y, 100, 100);
   }
 
@@ -261,6 +266,7 @@ var init = function (canvas, context, canvasElement) {
 }
 
 var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
+  let endGame = false;
   var pillers = [];
   var backgroundImage = new Image();
   backgroundImage.src = "./images/backgroung.svg";
@@ -268,7 +274,7 @@ var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
   pillers.push(new piller(context, canvas, canvas.width() * 0.75));
   pillers.push(new piller(context, canvas, canvas.width() * 0.40));
 
-  setInterval(function() {
+  var GameInterval = setInterval(function() {
     context.clearRect(0,0, canvas.width(), canvas.height());
     context.drawImage(backgroundImage, 0,0, canvas.width(), canvas.height());
 
@@ -278,8 +284,12 @@ var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
          i = i - 1;
          pillers.push(new piller(context, canvas));
       } else {
-        checkCollision(flabber, pillers[i]);
+      endGame = checkCollision(flabber, pillers[i]);
         pillers[i].draw();
+        if (endGame) {
+          clearInterval(GameInterval);
+          break;
+        }
       }
     }
     flabber.draw();
