@@ -68,15 +68,44 @@ var addEventListeners = function(flabber) {
   })
 }
 
-var piller = function (context, canvas, custumLocation) {
+var checkCollision = function (flabber, piller) {
+  var birdX = flabber.getX();
+  var birdXLimit = birdX + 100; // 100 is bird size (height and width)
+  var birdY = flabber.getY();
+  var birdYLimit = birdY + 100;
+  var pillerX = piller.x();
+  var pillerXLimit = pillerX + 50; // 50 is piller width
+  var pillerY = piller.y();
+  var pillerYLimit = pillerY + piller.topPillerheight;
+  var topPillerheight = piller.topPillerheight;
+  var bottomPillerYCordinate = piller.bottomPillerY;
+
+  // comparing bird upper limit
+  if (birdXLimit >= pillerX && birdY <= topPillerheight) {
+    console.log("collision on top piller");
+    return true;
+  };
+
+  // comparing bird lower limit with below piller
+  if (birdXLimit >= pillerX && birdYLimit >= bottomPillerYCordinate) {
+    console.log("collision on bottom piller");
+    return true;
+  };
+
+  return false;
+}
+
+var piller = function (context, canvas, custumLocation, flabber) {
   var x = custumLocation || canvas.width();
   var y = 0;
   var width = 50;
   var minWindowToEscape = canvas.height() * 0.20;
   var topPillerheight = getRandomValidHeight();
   var bottomX = custumLocation || canvas.width();
-  var bottomY = canvas.height();
+  // var bottomY = canvas.height();
   var bottomPillerheight = (canvas.height() - (topPillerheight + minWindowToEscape));
+  var bottomPillerY = (topPillerheight + minWindowToEscape);
+
 
 
  function getRandomValidHeight() {
@@ -121,12 +150,19 @@ var piller = function (context, canvas, custumLocation) {
     y = newY;
   }
 
+  var getBottomY = function () {
+    return bottomY;
+  }
+
   return {
     x: getX,
     y: getY,
     setX: setX,
     setY: setY,
     draw: draw,
+    width: width,
+    topPillerheight: topPillerheight,
+    bottomPillerY: bottomPillerY
   };
 }
 
@@ -139,6 +175,14 @@ var bird = function (context, canvas) {
 
   var birdImage = new Image();
   birdImage.src = './images/bird.png';
+
+  var getX = function () {
+    return x;
+  }
+
+  var getY = function () {
+    return y;
+  }
 
   var setX = function (newX) {
     x = newX;
@@ -175,8 +219,8 @@ var bird = function (context, canvas) {
   }
 
   return {
-    x: x,
-    y: y,
+    getX: getX,
+    getY: getY,
     gravitySpeed: gravitySpeed,
     gravity: gravity,
     setX: setX,
@@ -222,7 +266,7 @@ var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
   backgroundImage.src = "./images/backgroung.svg";
   pillers.push(new piller(context, canvas));
   pillers.push(new piller(context, canvas, canvas.width() * 0.75));
-    pillers.push(new piller(context, canvas, canvas.width() * 0.40));
+  pillers.push(new piller(context, canvas, canvas.width() * 0.40));
 
   setInterval(function() {
     context.clearRect(0,0, canvas.width(), canvas.height());
@@ -234,6 +278,7 @@ var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
          i = i - 1;
          pillers.push(new piller(context, canvas));
       } else {
+        checkCollision(flabber, pillers[i]);
         pillers[i].draw();
       }
     }
