@@ -45,17 +45,19 @@ var piller = function (context, canvas, custumLocation) {
   }
 
   var topPiller = new Image();
-  topPiller.src = "";
+  topPiller.src = "./images/TopPipe.png";
 
   var bottomPiller = new Image();
-  topPiller.src = "";
+  bottomPiller.src = "./images/bottomPipe.png";
 
   var draw = function () {
     update();
     context.fillStyle = "red";
-    context.fillRect(x, y, width, topPillerheight);
+    context.drawImage(topPiller, x, y, width, topPillerheight);
+    // context.fillRect(x, y, width, topPillerheight);
     context.fillStyle = "green";
-    context.fillRect(bottomX, (topPillerheight + minWindowToEscape), width, bottomPillerheight);
+    context.drawImage(bottomPiller, bottomX, (topPillerheight + minWindowToEscape), width, bottomPillerheight);
+    // context.fillRect(bottomX, (topPillerheight + minWindowToEscape), width, bottomPillerheight);
   }
 
   var getX = function () {
@@ -168,6 +170,8 @@ var init = function (canvas, context, canvasElement) {
 
 var startGame = function (canvas, context, canvasElement, flabber) {
   var pillers = [];
+  var backgroundImage = new Image();
+  backgroundImage.src = "./images/backgroung.svg";
   pillers.push(new piller(context, canvas));
   pillers.push(new piller(context, canvas, (canvas.width() * 0.75)));
   pillers.push(new piller(context, canvas, (canvas.width() * 0.40)));
@@ -175,6 +179,8 @@ var startGame = function (canvas, context, canvasElement, flabber) {
 
   setInterval(function() {
     context.clearRect(0,0, canvas.width(), canvas.height());
+    context.drawImage(backgroundImage, 0,0, canvas.width(), canvas.height());
+
     for (var i=0; i < pillers.length; i++) {
       if(pillers[i].x() < -100) {
          pillers.splice(i,1);
