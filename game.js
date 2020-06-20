@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var gameCanvas = new canvas('flabberGame');
   var canvasContext = gameCanvas.canvas2dContext;
   var canvasElement = gameCanvas.canvasElement;
-  var flabber = new bird(canvasContext);
+  var flabber = new bird(canvasContext, gameCanvas);
   addEventListeners(flabber);
   init(gameCanvas, canvasContext, canvasElement);
   startGame(gameCanvas, canvasContext, canvasElement, flabber);
@@ -32,7 +32,7 @@ var piller = function (context, canvas, custumLocation) {
   var width = 50;
   var minWindowToEscape = canvas.height() * 0.20;
   var topPillerheight = getRandomValidHeight();
-  var bottomX = canvas.width();
+  var bottomX = custumLocation || canvas.width();
   var bottomY = canvas.height();
   var bottomPillerheight = (canvas.height() - (topPillerheight + minWindowToEscape));
 
@@ -54,10 +54,8 @@ var piller = function (context, canvas, custumLocation) {
     update();
     context.fillStyle = "red";
     context.drawImage(topPiller, x, y, width, topPillerheight);
-    // context.fillRect(x, y, width, topPillerheight);
     context.fillStyle = "green";
     context.drawImage(bottomPiller, bottomX, (topPillerheight + minWindowToEscape), width, bottomPillerheight);
-    // context.fillRect(bottomX, (topPillerheight + minWindowToEscape), width, bottomPillerheight);
   }
 
   var getX = function () {
@@ -90,7 +88,7 @@ var piller = function (context, canvas, custumLocation) {
   };
 }
 
-var bird = function (context) {
+var bird = function (context, canvas) {
   var x = 0;
   var y = 0;
   var size = 100;
@@ -117,8 +115,16 @@ var bird = function (context) {
   }
 
   var dropDownBehaviour = function () {
+    if (y >= canvas.height() - size && gravity > 0) {
+      return;
+    }
+
+    if (y <= 0 && gravity < 0) {
+      return;
+    }
+
     gravitySpeed += gravity;
-    y = y + gravitySpeed + gravity;
+    y =  y + gravitySpeed + gravity;
   }
 
   var draw = function () {
@@ -173,9 +179,8 @@ var startGame = function (canvas, context, canvasElement, flabber) {
   var backgroundImage = new Image();
   backgroundImage.src = "./images/backgroung.svg";
   pillers.push(new piller(context, canvas));
-  pillers.push(new piller(context, canvas, (canvas.width() * 0.75)));
-  pillers.push(new piller(context, canvas, (canvas.width() * 0.40)));
-  pillers.push(new piller(context, canvas, (canvas.width() * 0.15)));
+  pillers.push(new piller(context, canvas, canvas.width() * 0.75));
+    pillers.push(new piller(context, canvas, canvas.width() * 0.40));
 
   setInterval(function() {
     context.clearRect(0,0, canvas.width(), canvas.height());
@@ -184,6 +189,7 @@ var startGame = function (canvas, context, canvasElement, flabber) {
     for (var i=0; i < pillers.length; i++) {
       if(pillers[i].x() < -100) {
          pillers.splice(i,1);
+         i = i - 1;
          pillers.push(new piller(context, canvas));
       } else {
         pillers[i].draw();
