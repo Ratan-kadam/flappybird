@@ -274,7 +274,8 @@ var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
   backgroundImage.src = "./images/backgroung.svg";
   pillers.push(new piller(context, canvas));
   pillers.push(new piller(context, canvas, canvas.width() * 0.75));
-  pillers.push(new piller(context, canvas, canvas.width() * 0.40));
+  pillers.push(new piller(context, canvas, canvas.width() * 0.45));
+  pillers.push(new piller(context, canvas, canvas.width() * 0.28));
 
   var GameInterval = setInterval(function() {
     context.clearRect(0,0, canvas.width(), canvas.height());
