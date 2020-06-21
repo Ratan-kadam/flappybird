@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var flabber = new bird(canvasContext, gameCanvas);
   var scoreBoard = new ScoreBoard('', canvasContext, gameCanvas);
 
-  addEventListeners(flabber);
+  addEventListeners(flabber, gameCanvas, canvasContext, canvasElement, flabber, scoreBoard);
   init(gameCanvas, canvasContext, canvasElement);
   startGame(gameCanvas, canvasContext, canvasElement, flabber, scoreBoard);
 })
@@ -51,7 +51,7 @@ function ScoreBoard (name, context, canvas) {
   return returnVar;
 }
 
-var addEventListeners = function(flabber) {
+var addEventListeners = function(flabber, gameCanvas, canvasContext, canvasElement, flabber, scoreBoard) {
   var skipKeyPress = false;
   document.addEventListener('keydown', function(e) {
     if(skipKeyPress) {
@@ -78,6 +78,9 @@ var addEventListeners = function(flabber) {
     skipKeyPress = false;
     flabber.setGravity(0.05);
     flabber.setGravitySpeed(0);
+  })
+  document.getElementsByClassName('endScreen')[0].addEventListener('click', function() {
+    startGame(gameCanvas, canvasContext, canvasElement, flabber, scoreBoard);
   })
 }
 
@@ -185,7 +188,7 @@ var piller = function (context, canvas, custumLocation, flabber) {
 
 var bird = function (context, canvas) {
   var x = 0;
-  var y = 0;
+  var y = canvas.height()/2;
   var size = 100;
   var gravitySpeed = 0;
   var gravity = 0.05;
@@ -281,6 +284,9 @@ var init = function (canvas, context, canvasElement) {
 }
 
 var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
+  var ele = document.getElementsByClassName('endScreen')[0]
+  ele.classList.add('display-none');
+  flabber.setY(canvas.height()/2);
   let endGame = false;
   var pillers = [];
   var backgroundImage = new Image();
@@ -303,6 +309,7 @@ var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
       endGame = checkCollision(flabber, pillers[i]);
         pillers[i].draw();
         if (endGame) {
+          ele.classList.remove('display-none');
           clearInterval(GameInterval);
         }
       }
