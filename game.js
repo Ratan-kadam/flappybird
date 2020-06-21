@@ -66,6 +66,19 @@ var addEventListeners = function(flabber) {
     flabber.setGravity(0.05);
     flabber.setGravitySpeed(0);
   })
+  document.addEventListener('touchstart', function(e) {
+    if(skipKeyPress) {
+      return;
+    }
+    flabber.setGravity(-0.05);
+    flabber.setGravitySpeed(0);
+    skipKeyPress = true;
+  })
+  document.addEventListener('touchend', function(e) {
+    skipKeyPress = false;
+    flabber.setGravity(0.05);
+    flabber.setGravitySpeed(0);
+  })
 }
 
 var checkCollision = function (flabber, piller) {
