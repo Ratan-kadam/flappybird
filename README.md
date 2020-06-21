@@ -1,5 +1,5 @@
 # flappybird
-flappy bird game javascript game implementation
+flappy bird game HTML5, javascript, css game implementation.
 
 https://ratan-kadam.github.io/flappybird/
 
