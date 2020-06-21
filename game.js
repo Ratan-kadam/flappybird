@@ -284,6 +284,7 @@ var init = function (canvas, context, canvasElement) {
 }
 
 var startGame = function (canvas, context, canvasElement, flabber, scoreBoard) {
+  scoreBoard.updateScore(1);
   var ele = document.getElementsByClassName('endScreen')[0]
   ele.classList.add('display-none');
   flabber.setY(canvas.height()/2);
