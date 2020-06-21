@@ -57,26 +57,26 @@ var addEventListeners = function(flabber, gameCanvas, canvasContext, canvasEleme
     if(skipKeyPress) {
       return;
     }
-    flabber.setGravity(-0.05);
+    flabber.setGravity(-0.10);
     flabber.setGravitySpeed(0);
     skipKeyPress = true;
   })
   document.addEventListener('keyup', function(e) {
     skipKeyPress = false;
-    flabber.setGravity(0.05);
+    flabber.setGravity(0.10);
     flabber.setGravitySpeed(0);
   })
   document.addEventListener('touchstart', function(e) {
     if(skipKeyPress) {
       return;
     }
-    flabber.setGravity(-0.05);
+    flabber.setGravity(-0.10);
     flabber.setGravitySpeed(0);
     skipKeyPress = true;
   })
   document.addEventListener('touchend', function(e) {
     skipKeyPress = false;
-    flabber.setGravity(0.05);
+    flabber.setGravity(0.10);
     flabber.setGravitySpeed(0);
   })
   document.getElementsByClassName('endScreen')[0].addEventListener('click', function() {
